@@ -9,7 +9,22 @@ namespace VinFletchersArrows
     {
         private ArrowHead _arrowHead;
         private Fletching _fletching;
-        private int _shaftLength; 
+        private int _shaftLength;
+
+        public ArrowHead ArrowHead
+        {
+            get { return _arrowHead; }
+        }
+
+        public Fletching Fletching
+        {
+            get { return _fletching; }
+        }
+
+        public int ShaftLength
+        {
+            get { return _shaftLength; }
+        }
 
         public Arrow(ArrowHead arrowHead, Fletching fletching, int shaftLength)
         {
@@ -17,12 +32,6 @@ namespace VinFletchersArrows
             this._fletching = fletching;
             this._shaftLength = shaftLength;
         }
-
-        public Arrow() { }
-
-        public ArrowHead GetArrowHead() => _arrowHead;
-        public Fletching GetFletching() => _fletching;
-        public int GetShaftLength() => _shaftLength;
 
         public float ArrowheadCost => _arrowHead switch
         {
@@ -38,7 +47,7 @@ namespace VinFletchersArrows
             Fletching.goose => 3f,
             _ => 0f
         };
-        
+
         public float ShaftCost => _shaftLength * 0.05f;
         public float TotalCost() => ArrowheadCost + FletchingCost + ShaftCost;
 
@@ -58,12 +67,12 @@ namespace VinFletchersArrows
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("Welcome to Vin Fletcher's Arrow Emporium!");
             Console.ForegroundColor = ConsoleColor.White;
-            
+
             ArrowBuilder("Choose your arrowhead:",
-                new string[] {"Steel", "Wood", "Obsidian"},
+                new string[] { "Steel", "Wood", "Obsidian" },
                 choice => selectedArrowHead = (ArrowHead)choice);
             ArrowBuilder("Choose your fletching:",
-                new string[] {"Plastic", "Turkey", "Goose"},
+                new string[] { "Plastic", "Turkey", "Goose" },
                 choice => selectedFletching = (Fletching)choice);
             Console.Write("\nChoose your shaft length: (25-40) inches. ");
             int shaftLength = Convert.ToInt32(Console.ReadLine());
@@ -79,21 +88,21 @@ namespace VinFletchersArrows
                 return;
             }
             Arrow arrow = new Arrow(selectedArrowHead, selectedFletching, selectedShaftLength);
-            Console.ForegroundColor= ConsoleColor.Cyan;
-            Console.WriteLine($"Calculating the cost of your {arrow.GetArrowHead()} arrow with {arrow.GetFletching()} fletching and a {arrow.GetShaftLength()}-inch shaft.");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($"Calculating the cost of your {arrow.ArrowHead} arrow with {arrow.Fletching} fletching and a {arrow.ShaftLength}-inch shaft.");
             Console.Write("\n");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"Arrowhead cost: {arrow.GetArrowHead()} - {arrow.ArrowheadCost} gold");
+            Console.WriteLine($"Arrowhead cost: {arrow.ArrowHead} - {arrow.ArrowheadCost} gold");
             Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine($"Fletching cost: {arrow.GetFletching()} - {arrow.FletchingCost} gold");
+            Console.WriteLine($"Fletching cost: {arrow.Fletching} - {arrow.FletchingCost} gold");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"Shaft cost: {arrow.GetShaftLength()}-inch - {arrow.ShaftCost} gold");
+            Console.WriteLine($"Shaft cost: {arrow.ShaftLength}-inch - {arrow.ShaftCost} gold");
             Console.Write($"\nThe total cost is: ");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write($"{arrow.TotalCost()} gold");
             Console.ResetColor();
 
-            void ArrowBuilder (string question, string[] options, Action<int> setChoice)
+            void ArrowBuilder(string question, string[] options, Action<int> setChoice)
             {
                 bool validChoice = true;
                 while (validChoice)
