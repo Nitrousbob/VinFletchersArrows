@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace VinFletchersArrows
+﻿namespace VinFletchersArrows
 {
     public enum ArrowHead { steel, wood, obsidian }
     public enum Fletching { plastic, turkey, goose }
