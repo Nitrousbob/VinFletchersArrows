@@ -9,6 +9,19 @@
         private Fletching _fletching;
         private int _shaftLength;
 
+        public static Arrow CreateEliteArrow()
+        {
+            return new Arrow(ArrowHead.steel, Fletching.plastic, 95);
+        }
+        public static Arrow CreateBeginnerArrow()
+        {
+            return new Arrow(ArrowHead.wood, Fletching.goose, 75);
+        }
+        public static Arrow CreateMarksmanArrow()
+        {
+            return new Arrow(ArrowHead.steel, Fletching.goose, 65);
+        }
+
         public ArrowHead ArrowHead
         {
             get { return _arrowHead; }
@@ -48,9 +61,6 @@
 
         public float ShaftCost => _shaftLength * 0.05f;
         public float TotalCost() => ArrowheadCost + FletchingCost + ShaftCost;
-
-
-
     }
 
     internal class Program
@@ -60,32 +70,71 @@
             ArrowHead selectedArrowHead = ArrowHead.steel;
             Fletching selectedFletching = Fletching.plastic;
             int selectedShaftLength = 0;
+            Arrow arrow;
 
             Console.Title = "Vin Fletcher's Arrow";
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("Welcome to Vin Fletcher's Arrow Emporium!");
             Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Choose from one of the following Arrows or create your own custom arrow:");
+            Console.WriteLine("1. An Elite Arrow");
+            Console.WriteLine("2. A Beginner Arrow");
+            Console.WriteLine("3. A Marksman Arrow");
+            Console.WriteLine("4. Create your own custom arrow");
+            Console.Write("Your choice: ");
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 
-            ArrowBuilder("Choose your arrowhead:",
-                new string[] { "Steel", "Wood", "Obsidian" },
-                choice => selectedArrowHead = (ArrowHead)choice);
-            ArrowBuilder("Choose your fletching:",
-                new string[] { "Plastic", "Turkey", "Goose" },
-                choice => selectedFletching = (Fletching)choice);
-            Console.Write("\nChoose your shaft length: (25-40) inches. ");
-            int shaftLength = Convert.ToInt32(Console.ReadLine());
-            if (shaftLength >= 25 && shaftLength <= 40)
-            {
-                selectedShaftLength = shaftLength;
-            }
-            else
+            while (keyInfo.KeyChar < '1' || keyInfo.KeyChar > '4')
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Invalid shaft length. Please enter a length between 25 and 40.");
+                Console.WriteLine("Invalid choice. Please enter a number between 1 and 4.");
                 Console.ForegroundColor = ConsoleColor.White;
-                return;
+                Console.WriteLine("Your choice: ");
+                keyInfo = Console.ReadKey(true);
             }
-            Arrow arrow = new Arrow(selectedArrowHead, selectedFletching, selectedShaftLength);
+            switch (keyInfo.KeyChar)
+            {
+                case '1':
+                    arrow = Arrow.CreateEliteArrow();
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine("\nYou have chosen the Elite Arrow!");
+                    break;
+                case '2':
+                    arrow = Arrow.CreateBeginnerArrow();
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine("\nYou have chosen the Beginner Arrow!");
+                    break;
+                case '3':
+                    arrow = Arrow.CreateMarksmanArrow();
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine("\nYou have chosen the Marksman Arrow!");
+                    break;
+                case '4':
+                    ArrowBuilder("\nChoose your arrowhead:",
+                        new string[] { "Steel", "Wood", "Obsidian" },
+                        choice => selectedArrowHead = (ArrowHead)choice);
+                    ArrowBuilder("Choose your fletching:",
+                        new string[] { "Plastic", "Turkey", "Goose" },
+                        choice => selectedFletching = (Fletching)choice);
+                    Console.Write("\nChoose your shaft length: (25-40) inches. ");
+                    int shaftLength = Convert.ToInt32(Console.ReadLine());
+                    if (shaftLength >= 25 && shaftLength <= 40)
+                    {
+                        selectedShaftLength = shaftLength;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid shaft length. Please enter a length between 25 and 40.");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        return;
+                    }
+                    arrow = new Arrow(selectedArrowHead, selectedFletching, selectedShaftLength);
+                    break;
+                default:
+                    return;
+            }
+
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine($"Calculating the cost of your {arrow.ArrowHead} arrow with {arrow.Fletching} fletching and a {arrow.ShaftLength}-inch shaft.");
             Console.Write("\n");
@@ -99,28 +148,28 @@
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write($"{arrow.TotalCost()} gold");
             Console.ResetColor();
+        }
 
-            void ArrowBuilder(string question, string[] options, Action<int> setChoice)
+        static void ArrowBuilder(string question, string[] options, Action<int> setChoice)
+        {
+            bool validChoice = true;
+            while (validChoice)
             {
-                bool validChoice = true;
-                while (validChoice)
+                Console.WriteLine();
+                Console.WriteLine(question);
+                for (int i = 0; i < options.Length; i++)
                 {
-                    Console.WriteLine();
-                    Console.WriteLine(question);
-                    for (int i = 0; i < options.Length; i++)
-                    {
-                        Console.WriteLine($"{i + 1}. {options[i]}");
-                    }
-                    ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-                    if (keyInfo.KeyChar >= '1' && keyInfo.KeyChar <= (char)('0' + options.Length))
-                    {
-                        setChoice(keyInfo.KeyChar - '1');
-                        validChoice = false;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid choice.");
-                    }
+                    Console.WriteLine($"{i + 1}. {options[i]}");
+                }
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                if (keyInfo.KeyChar >= '1' && keyInfo.KeyChar <= (char)('0' + options.Length))
+                {
+                    setChoice(keyInfo.KeyChar - '1');
+                    validChoice = false;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid choice.");
                 }
             }
         }
